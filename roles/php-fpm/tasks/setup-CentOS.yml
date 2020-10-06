@@ -1,0 +1,38 @@
+- name: install the php rpm from a remote repo
+  yum:
+    name: http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+    state: present
+
+- name: install php 7.4 and dependencies
+  yum:
+    enablerepo: remi-php74
+    name: "{{item}}"
+    state: present
+  with_items:
+    - php
+    - php-gd
+    - php-ldap
+    - php-zip
+    - php-gmp 
+    - php-pdo
+    - php-pdo_mysql 
+    - php-mcrypt
+    - php-mbstring
+    - php-dom
+    - php-fpm
+
+- name: start php-fpm service
+  service:
+    name: php-fpm
+    state: started
+    enabled: yes
+
+- name: install php composer
+  shell: curl -sS https://getcomposer.org/installer | php
+  args:
+    chdir: /tmp
+
+- name: move composer to path
+  shell: mv composer.phar /usr/local/bin/composer
+  args:
+    chdir: /tmp

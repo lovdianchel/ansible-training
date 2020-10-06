@@ -1,0 +1,61 @@
+---
+# tasks file for mariadb
+
+- name: install software-properties-common
+  apt:
+    name: software-properties-common
+    state: latest
+
+- name: add mariadb 10.4 repo key
+  apt_key:
+    id: "0xF1656F24C74CD1D8"
+    keyserver: keyserver.ubuntu.com
+    state: present
+
+- name: add mariadb 10.4 repo
+  apt_repository:
+    repo: "deb [arch=amd64,arm64,ppc64el] http://mariadb.mirror.liquidtelecom.com/repo/10.4/ubuntu {{ ansible_distribution_release }} main"
+    state: present
+    update_cache: yes
+    filename: mariadb
+    
+- name: install mariadb 10.4
+  apt:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - mariadb-server 
+    - mariadb-client
+    - python-mysqldb
+
+- name: copy mariadb root password file
+  template: 
+    src: .my.cnf.j2 
+    dest: ~/.my.cnf
+
+- name: create mariadb configuration file
+  template: 
+    src: my.cnf.j2 
+    dest: /etc/my.cnf
+  notify: restart mariadb service
+
+- name: create mariadb log file
+  file: 
+    path: /var/log/mysqld.log 
+    state: touch 
+    owner: mysql 
+    group: mysql
+
+- name: create mariadb PID directory
+  file: 
+    path: /var/run/mysqld 
+    state: directory 
+    owner: mysql 
+    group: mysql
+
+- name: start mariadb service
+  service: 
+    name: mariadb 
+    state: started 
+    enabled: yes
+

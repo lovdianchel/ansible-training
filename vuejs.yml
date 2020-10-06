@@ -1,0 +1,8 @@
+---
+- name: Deploy VueJS Application
+  hosts: webservers
+  roles:
+  - common
+  - nginx
+  - nodejs
+  - vuejs

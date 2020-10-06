@@ -1,0 +1,47 @@
+---
+# tasks file for common
+
+- name: enable epel release Centos
+  yum: 
+    name: epel-release
+    state: latest
+  when: ansible_distribution == 'CentOS'
+
+- name: run apt update
+  apt:
+    update_cache: yes
+  when: ansible_distribution == 'Ubuntu'
+
+- name: install package
+  yum:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - python
+    - git
+    - curl
+    - unzip
+    - python-pip
+    - python-setuptools
+  when: ansible_distribution == 'CentOS'
+
+- name: install package
+  apt:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - python3
+    - git
+    - curl
+    - python3-pip
+    - python3-setuptools
+  when: ansible_distribution == 'Ubuntu'
+
+# - name: install python lib pexpect
+#   pip:
+#     name: "{{item}}"
+#     executable: pip3
+#   with_items:
+#     - pexpect
+#     - pymysql
+#   when: ansible_distribution == 'Ubuntu'

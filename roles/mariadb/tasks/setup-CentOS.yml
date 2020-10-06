@@ -1,0 +1,54 @@
+---
+# tasks file for mariadb
+
+
+- name: add mariadb 10.4 repo
+  copy:
+    content: "{{mariadb_repo}}"
+    dest: /etc/yum.repos.d/MariaDB.repo
+
+# - name: yum makecache
+#   yum:
+#     update_cache: yes
+#     name: '*'
+#     state: latest
+
+- name: install mariadb 10.4
+  yum:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - MariaDB-server 
+    - MariaDB-client
+    - MySQL-python
+
+- name: copy mariadb root password file
+  template: 
+    src: .my.cnf.j2 
+    dest: ~/.my.cnf
+
+- name: create mariadb configuration file
+  template: 
+    src: my.cnf.j2 
+    dest: /etc/my.cnf
+  notify: restart mariadb service
+
+- name: create mariadb log file
+  file: 
+    path: /var/log/mysqld.log 
+    state: touch 
+    owner: mysql 
+    group: mysql
+
+- name: create mariadb PID directory
+  file: 
+    path: /var/run/mysqld 
+    state: directory 
+    owner: mysql 
+    group: mysql
+
+- name: start mariadb service
+  service: 
+    name: mariadb 
+    state: started 
+    enabled: yes

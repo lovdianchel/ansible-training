@@ -1,0 +1,28 @@
+---
+# tasks file for nodejs
+
+- name: install package
+  yum:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - gcc-c++ 
+    - make
+  when: ansible_distribution == 'CentOS'
+
+- name: add nodejs 
+  shell: curl -sL https://rpm.nodesource.com/setup_14.x | sudo -E bash -
+  args:
+    chdir: /tmp
+  when: ansible_distribution == 'CentOS'
+
+- name: add nodejs 
+  shell: curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+  args:
+    chdir: /tmp
+  when: ansible_distribution == 'Ubuntu'
+
+- name: install nodejs
+  yum:
+    name: nodejs
+    state: latest

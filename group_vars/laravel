@@ -1,0 +1,11 @@
+---
+mysql_port: 3306
+dbrootpassword: 
+dbrootpasswordnew: toor
+dbname: homestead
+dbuser: homestead
+dbpassword: secret
+
+deploy_app: laravel
+nginx_docroot: /var/www/laravel
+

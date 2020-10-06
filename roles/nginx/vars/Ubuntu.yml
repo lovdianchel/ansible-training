@@ -1,0 +1,4 @@
+---
+nginx_user: www-data
+nginx_pid: /run/nginx.pid
+nginx_vhost_config: /etc/nginx/sites-available/default

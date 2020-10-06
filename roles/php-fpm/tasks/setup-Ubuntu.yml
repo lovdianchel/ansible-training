@@ -1,0 +1,38 @@
+---
+# tasks file for php7.4-fpm
+
+- name: add php7.4 repo
+  apt_repository:
+    repo: "ppa:ondrej/php"
+
+- name: install php 7.4 and dependencies
+  apt:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - php7.4
+    - php7.4-common
+    - php7.4-mbstring
+    - php7.4-xml
+    - php7.4-mysql
+    - php7.4-fpm
+
+- name: start php7.4-fpm service
+  service:
+    name: php7.4-fpm
+    state: started
+    enabled: yes
+
+- name: change php-fpm listen from socket to port
+  shell: sed -i "s/listen =.*/listen = 127.0.0.1:9000/g" /etc/php/7.4/fpm/pool.d/www.conf
+  notify: restart php7.4-fpm service
+
+- name: install php composer
+  shell: curl -sS https://getcomposer.org/installer | php
+  args:
+    chdir: /tmp
+
+- name: move composer to path
+  shell: mv composer.phar /usr/local/bin/composer
+  args:
+    chdir: /tmp

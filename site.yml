@@ -1,0 +1,9 @@
+---
+- name: Deploy VueJS Application
+  hosts: webservers
+  vars:
+    deploy_app: vuejs
+    nginx_docroot: /var/www/vuejs
+
+  roles:
+  - vuejs

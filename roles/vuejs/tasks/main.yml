@@ -1,0 +1,35 @@
+---
+# tasks file for vuejs
+
+- name: copy ssh private key file
+  copy:
+    content:  "{{ git_ssh_key }}"
+    dest: /root/.ssh/id_rsa
+    mode: "0600"
+
+- name: create directory
+  file: 
+    path: "{{nginx_docroot}}"
+    state: directory
+    
+- name: clone git repository
+  git:
+    repo: "git@gitlab.com:pt-dot-internal/internship/aws-vuejs-pipeline.git"
+    dest: "{{nginx_docroot}}"
+    accept_hostkey: yes
+    clone: yes
+
+- name: npm install
+  npm:
+    path: "{{nginx_docroot}}"
+
+- name: npm run build
+  shell: "npm run build"
+  args:
+    chdir: "{{nginx_docroot}}"
+
+- name: start nginx service
+  service: 
+    name: nginx 
+    state: started 
+    enabled: yes

@@ -1,0 +1,8 @@
+---
+# tasks file for php7.4-fpm
+
+- include: setup-CentOS.yml
+  when: ansible_distribution == 'CentOS'
+
+- include: setup-Ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'

@@ -1,0 +1,3 @@
+---
+nginx_docroot: /var/www/html
+nginx_config: /etc/nginx/nginx.conf

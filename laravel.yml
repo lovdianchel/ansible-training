@@ -1,0 +1,13 @@
+---
+- name: Deploy Laravel Application
+  hosts: laravel
+  roles:
+  - common
+  - nginx
+  - nodejs
+  - php-fpm
+  - mariadb
+  - laravel
+
+
+
